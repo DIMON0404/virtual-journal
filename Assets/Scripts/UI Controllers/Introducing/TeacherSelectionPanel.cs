@@ -14,6 +14,7 @@ namespace UI_Controllers.Introducing
         [SerializeField] private InputField SearchField;
         private List<ItemSO> SelectedItems;
         private List<ItemSO> NotSelectedItmes;
+        private int MaxCount;
 
         public void Init()
         {
@@ -21,11 +22,12 @@ namespace UI_Controllers.Introducing
             SelectedTeachers.OnClick = DeselectAndUpdate;
         }
     
-        public void Init(TeacherControllerAbstract teacherController, ItemSO[] items, ItemSO[] selectedItems)
+        public void Init(TeacherControllerAbstract teacherController, ItemSO[] items, ItemSO[] selectedItems, int maxCount = -1)
         {
             TeacherController = teacherController;
             NotSelectedItmes = new List<ItemSO>(items);
             SelectedItems = new List<ItemSO>();
+            MaxCount = maxCount;
             SetSelectedItems(selectedItems);
             UpdateItems();
         }
@@ -51,6 +53,19 @@ namespace UI_Controllers.Introducing
         public void Select(ItemSO item, bool update)
         {
             NotSelectedItmes.Remove(item);
+            if (MaxCount == 0)
+                if (update)
+                {
+                    UpdateItems();
+                    return;
+                }
+
+            if (MaxCount > 0)
+                while (SelectedItems.Count >= MaxCount)
+                {
+                    Deselect(SelectedItems[SelectedItems.Count - 1], false);
+                }
+            
             SelectedItems.Add(item);
             if (update)
                 UpdateItems();

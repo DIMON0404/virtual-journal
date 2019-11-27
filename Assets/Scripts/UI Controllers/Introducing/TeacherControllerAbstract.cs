@@ -7,18 +7,14 @@ namespace UI_Controllers.Introducing
     public abstract class TeacherControllerAbstract : MonoBehaviour
     {
         [SerializeField] protected JournalModelProxy JournalModel;
-        [SerializeField] protected Content Teachers;
         [SerializeField] protected TeacherSelectionPanel SelectionPanel;
+        [SerializeField] protected int MaxCount = -1;
         [ValidateField(typeof(ITeachersProxy))][SerializeField] protected Object TeachersProxy;
         protected ITeachersProxy TeachersProxyGetter => TeachersProxy as ITeachersProxy;
 
         protected abstract List<Teacher> TeachersList { get; set; }
 
-        public void UpdateTeachersView()
-        {
-        
-            Teachers.SetItems(TeachersList.Select(item => item as ItemSO).ToList());
-        }
+        public abstract void UpdateTeachersView();
 
         public void UpdateTeachersList(List<Teacher> teachers)
         {
@@ -27,7 +23,7 @@ namespace UI_Controllers.Introducing
 
         public void SetSelectionPanelItems()
         {
-            SelectionPanel.Init(this, TeachersProxyGetter.Teachers.ToArray(), TeachersList.ToArray());
+            SelectionPanel.Init(this, TeachersProxyGetter.Teachers.ToArray(), TeachersList.ToArray(), MaxCount);
         }
     }
 }
