@@ -46,7 +46,12 @@ namespace Core.OrderList.Lesson
         {
             IDField.text = Lesson.ID.ToString();
             NameField.text = Lesson.Name;
-            int totalHeight = 100;
+            int totalHeight = 180;
+            if (OrderItem.Lesson.TeacherDatas.Count > 0)
+            {
+                totalHeight -= 80;
+            }
+            
             foreach (TeacherData data in OrderItem.Lesson.TeacherDatas)
             {
                 TeacherDataObject dataObject = Instantiate(Prefab, transform);
@@ -56,21 +61,21 @@ namespace Core.OrderList.Lesson
                 dataObject.Rect.anchoredPosition = position;
                 TeacherDataObjects.Add(dataObject);
                 dataObject.SetData(data.teacher, data.HasData ? data.DateTime.DateTime : DateTime.Now);
-                totalHeight += 60;
+                totalHeight += 80;
             }
 
             Vector2 positionButton = AddButton.anchoredPosition;
-            positionButton.y = -totalHeight;
+            positionButton.y = -totalHeight + 80;
             AddButton.anchoredPosition = positionButton;
             Vector2 size = Rect.sizeDelta;
-            size.y = totalHeight + 60;
+            size.y = totalHeight;
             Rect.sizeDelta = size;
         }
 
         public void RecalculateContent()
         {
             Vector2 size = Rect.sizeDelta;
-            size.y = 100 + 60 + TeacherDataObjects.Count * 60;
+            size.y = 100 + 80 + TeacherDataObjects.Count * 80;
             Rect.sizeDelta = size;
             OnRecalculateContent.Invoke();
         }
@@ -79,9 +84,9 @@ namespace Core.OrderList.Lesson
         {
             TeacherDataObject dataObject = Instantiate(Prefab, transform);
             Vector2 position = dataObject.Rect.anchoredPosition;
-            position.y = -(100 + TeacherDataObjects.Count * 60);
+            position.y = -(20 + TeacherDataObjects.Count * 80);
             dataObject.Rect.anchoredPosition = position;
-            AddButton.anchoredPosition = position - new Vector2(0, 60);
+            AddButton.anchoredPosition = position - new Vector2(0, 80);
             TeacherData teacherData = new TeacherData();
             dataObject.TeacherData = teacherData;
             OrderItem.Lesson.TeacherDatas.Add(teacherData);
