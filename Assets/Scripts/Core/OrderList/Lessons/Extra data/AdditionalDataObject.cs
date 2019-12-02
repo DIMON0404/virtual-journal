@@ -11,8 +11,9 @@ namespace Core.OrderList.Lessons.Extra_data
     {
         [SerializeField] private RectTransform AddButton;
         public Action OnRecalculateContent;
+        public Action OnSelectThis;
 
-        protected Journal_Model.Journal_Model.AdditionalPoints AdditionalPoints => OrderItem.PointsData;
+        public Journal_Model.Journal_Model.AdditionalPoints AdditionalPoints => OrderItem.PointsData;
         public PointDataObject Prefab;
         public List<PointDataObject> PointDatas;
         
@@ -77,6 +78,11 @@ namespace Core.OrderList.Lessons.Extra_data
             {
                 AdditionalPoints.Points[i].ID = i + 1;
             }
+        }
+
+        public void SelectThis()
+        {
+            OnSelectThis.Invoke();
         }
     }
 }

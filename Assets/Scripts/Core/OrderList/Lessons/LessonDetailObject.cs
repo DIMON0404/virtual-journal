@@ -15,7 +15,8 @@ namespace DefaultNamespace
         [SerializeField] private Text LessonName;
         [SerializeField] private RectTransform AddButton;
         public Action OnRecalculateContent;
-        protected LessonTheme LessonTheme => OrderItem.Lesson;
+        public Action OnSelectThis;
+        public LessonTheme LessonTheme => OrderItem.Lesson;
         public PointDataObject Prefab;
         public List<PointDataObject> PointDatas;
         
@@ -86,6 +87,11 @@ namespace DefaultNamespace
             {
                 LessonTheme.PointDatas[i].ID = i + 1;
             }
+        }
+        
+        public void SelectThis()
+        {
+            OnSelectThis.Invoke();
         }
     }
 }

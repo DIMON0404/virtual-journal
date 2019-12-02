@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Journal_Model;
+using Journal_Model.Journal_Model;
 using Journal_Model.Lesson;
 using Journal_Model.LessonThemes;
 using UnityEngine;
@@ -17,36 +18,76 @@ public class StudentPanel : MonoBehaviour
     [SerializeField] private InputField[] InputFields;
     [SerializeField] private Text Total;
     private StudentSO Student;
+    private List<PointData> Datas;
+    private bool IsLesson;
     private LessonData LessonData;
-    private LessonTheme LessonTheme;
+    private AdditionalPointsData AdditionalPointsData;
+    private Dictionary<PointData, float> Points;
     private int PointDataIndex;
 
     public void Init(StudentSO student, LessonData lessonData, LessonTheme lessonTheme, int pointDataIndex = 0)
     {
         Student = student;
+        Datas = lessonTheme.PointDatas;
+        IsLesson = true;
         LessonData = lessonData;
-        LessonTheme = lessonTheme;
+        Points = lessonData.Points;
         PointDataIndex = pointDataIndex;
         Name.text = Student.ToShortNSP();
+        UpdateData();
+    }
+
+    public void Init(StudentSO student, AdditionalPointsData additionalPointsData, int pointDataIndex = 0)
+    {
+        Student = student;
+        IsLesson = false;
+        AdditionalPointsData = additionalPointsData;
+        Datas = additionalPointsData.AdditionalPoints.Points;
+        if (additionalPointsData.Points.ContainsKey(student))
+            Points = additionalPointsData.Points[student];
+        else
+        {
+            Points = new Dictionary<PointData, float>();
+            additionalPointsData.Points.Add(student, Points);
+        }
+        PointDataIndex = pointDataIndex;
+        Name.text = Student.ToShortNSP();
+        UpdateData();
     }
 
     public void UpdateData()
     {
-        Presence.isOn = LessonData.IsPresence;
+        if (IsLesson)
+        {
+            Presence.gameObject.SetActive(true);
+            Presence.isOn = LessonData.IsPresence;
+        }
+        else
+        {
+            Presence.gameObject.SetActive(false);
+        }
+
         for (int i = 0; i < InputFields.Length; i++)
         {
-            if (LessonTheme.PointDatas.Count > i + PointDataIndex &&
-                LessonData.Points.ContainsKey(LessonTheme.PointDatas[i]))
+            if (Datas.Count > i + PointDataIndex)
             {
-                InputFields[i].text = LessonData.Points[LessonTheme.PointDatas[i + PointDataIndex]].ToString();
+                InputFields[i].gameObject.SetActive(true);
+                if (Points.ContainsKey(Datas[i + PointDataIndex]))
+                {
+                    InputFields[i].text = Points[Datas[i + PointDataIndex]].ToString();
+                }
+                else
+                {
+                    InputFields[i].text = "";
+                }
             }
             else
             {
-                InputFields[i].text = "";
+                InputFields[i].gameObject.SetActive(false);
             }
         }
 
-        Total.text = LessonData.Points.Values.Sum().ToString();
+        Total.text = Points.Values.Sum().ToString();
     }
 
     public void OnPresenceChanged(bool value)
@@ -58,9 +99,9 @@ public class StudentPanel : MonoBehaviour
     {
         if (string.IsNullOrEmpty(InputFields[index].text))
         {
-            if (LessonData.Points.ContainsKey(LessonTheme.PointDatas[index + PointDataIndex]))
+            if (Points.ContainsKey(Datas[index + PointDataIndex]))
             {
-                LessonData.Points.Remove(LessonTheme.PointDatas[index + PointDataIndex]);
+                Points.Remove(Datas[index + PointDataIndex]);
             }
             return;
         }
@@ -68,25 +109,25 @@ public class StudentPanel : MonoBehaviour
         float points;
         if (float.TryParse(InputFields[index].text, out points))
         {
-            if (LessonData.Points.ContainsKey(LessonTheme.PointDatas[index + PointDataIndex]))
+            if (Points.ContainsKey(Datas[index + PointDataIndex]))
             {
-                if (Math.Abs(LessonData.Points[LessonTheme.PointDatas[index + PointDataIndex]] - points) > 0.01f)
+                if (Math.Abs(Points[Datas[index + PointDataIndex]] - points) > 0.01f)
                 {
-                    LessonData.Points[LessonTheme.PointDatas[index + PointDataIndex]] = points;
+                    Points[Datas[index + PointDataIndex]] = points;
                     UpdateData();
                 }
             }
             else
             {
-                LessonData.Points.Add(LessonTheme.PointDatas[index + PointDataIndex], points);
+                Points.Add(Datas[index + PointDataIndex], points);
                 UpdateData();
             }
         }
         else
         {           
-            if (LessonData.Points.ContainsKey(LessonTheme.PointDatas[index + PointDataIndex]))
+            if (Points.ContainsKey(Datas[index + PointDataIndex]))
             {
-                LessonData.Points.Remove(LessonTheme.PointDatas[index + PointDataIndex]);
+                Points.Remove(Datas[index + PointDataIndex]);
             }
             return;
             

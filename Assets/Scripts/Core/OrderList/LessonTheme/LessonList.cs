@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+using Journal_Model.Lesson;
 using UI_Controllers;
 using UnityEngine;
 
@@ -20,9 +23,25 @@ namespace Core.OrderList.LessonTheme
             ResortItems();
             base.UpdateItems();
             JournalModelProxy.JournalModel.LessonThemes.Clear();
+            List<Lesson> listForRemoving = new List<Lesson>(JournalModelProxy.JournalModel.Lessons);
             foreach (LessonItem item in OrderItems)
             {
                 JournalModelProxy.JournalModel.LessonThemes.Add(item.Lesson);
+                if (JournalModelProxy.JournalModel.Lessons.All(lesson => lesson.LessonTheme != item.Lesson))
+                {
+                    JournalModelProxy.JournalModel.Lessons.Add(new Lesson(){LessonTheme = item.Lesson});
+                }
+
+                Lesson lessonForRemoving = listForRemoving.FirstOrDefault(lesson => lesson.LessonTheme == item.Lesson);
+                if (lessonForRemoving != null)
+                {
+                    listForRemoving.Remove(lessonForRemoving);
+                }
+            }
+
+            foreach (Lesson item in listForRemoving)
+            {
+                JournalModelProxy.JournalModel.Lessons.Remove(item);
             }
         }
 
