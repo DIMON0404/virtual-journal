@@ -4,14 +4,14 @@ using Journal_Model.LessonThemes;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Core.OrderList.Lesson
+namespace Core.OrderList.LessonTheme
 {
     public class LessonItemObject : OrderItemObject<LessonItem>
     {
         public InputField IDField;
         public InputField NameField;
         public Action OnIdChagned;
-        public LessonTheme Lesson => OrderItem.Lesson;
+        public Journal_Model.LessonThemes.LessonTheme Lesson => OrderItem.Lesson;
         public TeacherDataObject Prefab;
         public List<TeacherDataObject> TeacherDataObjects;
         public Action OnRecalculateContent;
@@ -47,12 +47,12 @@ namespace Core.OrderList.Lesson
             IDField.text = Lesson.ID.ToString();
             NameField.text = Lesson.Name;
             int totalHeight = 180;
-            if (OrderItem.Lesson.TeacherDatas.Count > 0)
+            if (Lesson.TeacherDatas.Count > 0)
             {
                 totalHeight -= 80;
             }
             
-            foreach (TeacherData data in OrderItem.Lesson.TeacherDatas)
+            foreach (TeacherData data in Lesson.TeacherDatas)
             {
                 TeacherDataObject dataObject = Instantiate(Prefab, transform);
                 dataObject.Init(data, this, Teachers);
@@ -83,10 +83,6 @@ namespace Core.OrderList.Lesson
         public void AddNewTeacherData()
         {
             TeacherDataObject dataObject = Instantiate(Prefab, transform);
-            Vector2 position = dataObject.Rect.anchoredPosition;
-            position.y = -(20 + TeacherDataObjects.Count * 80);
-            dataObject.Rect.anchoredPosition = position;
-            AddButton.anchoredPosition = position - new Vector2(0, 80);
             TeacherData teacherData = new TeacherData();
             dataObject.TeacherData = teacherData;
             OrderItem.Lesson.TeacherDatas.Add(teacherData);

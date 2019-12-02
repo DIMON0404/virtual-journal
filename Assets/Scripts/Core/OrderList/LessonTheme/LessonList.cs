@@ -1,7 +1,7 @@
 using UI_Controllers;
 using UnityEngine;
 
-namespace Core.OrderList.Lesson
+namespace Core.OrderList.LessonTheme
 {
     public class LessonList : OrderList<LessonItem, LessonItemObject>
     {
@@ -19,7 +19,7 @@ namespace Core.OrderList.Lesson
         {
             ResortItems();
             base.UpdateItems();
-            JournalModelProxy.JournalModel.LectureThemes.Clear();
+            JournalModelProxy.JournalModel.LessonThemes.Clear();
             foreach (LessonItem item in OrderItems)
             {
                 JournalModelProxy.JournalModel.LessonThemes.Add(item.Lesson);

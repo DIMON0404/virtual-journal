@@ -1,10 +1,9 @@
 using System;
-using Core.OrderList.Lesson;
 using Journal_Model;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Core.OrderList
+namespace Core.OrderList.LectureTheme
 {
     public class DateDataObject : MonoBehaviour
     {

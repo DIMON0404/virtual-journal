@@ -4,7 +4,7 @@ using Journal_Model.LessonThemes;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Core.OrderList.Lesson
+namespace Core.OrderList.LessonTheme
 {
     public class TeacherDataObject : MonoBehaviour
     {

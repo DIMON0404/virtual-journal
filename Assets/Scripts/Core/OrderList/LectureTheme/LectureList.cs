@@ -1,7 +1,7 @@
 using UI_Controllers;
 using UnityEngine;
 
-namespace Core.OrderList
+namespace Core.OrderList.LectureTheme
 {
     public class LectureList : OrderList<LectureItem, LectureItemObject>
     {

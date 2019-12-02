@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,7 +14,8 @@ namespace Core.OrderList
         private RectTransform Content;
 
         [SerializeField] protected T2 Prefab;
-        [SerializeField] private RectTransform AdditionalData;
+        [SerializeField] protected RectTransform AdditionalData;
+        [SerializeField] private AdditionalDataPosition Position = AdditionalDataPosition.Bottom;
         private List<T1> m_OrderItems;
         protected List<T2> OrderItemObjects;
 
@@ -23,11 +25,15 @@ namespace Core.OrderList
             set => m_OrderItems = value;
         }
 
-        private void Awake()
+        protected virtual void Awake()
         {
             ScrollRect = GetComponent<ScrollRect>();
             Content = ScrollRect.content;
             OrderItemObjects = new List<T2>();
+        }
+
+        protected virtual void OnEnable()
+        {
             UpdateItems();
         }
 
@@ -41,6 +47,11 @@ namespace Core.OrderList
             OrderItemObjects.Clear();
 
             float totalHeight = 0f;
+            if (Position == AdditionalDataPosition.Top)
+            {
+                LocateAdditionalPanel(ref totalHeight);
+            }
+            
             foreach (T1 orderItem in OrderItems)
             {
                 T2 newItem = Instantiate(Prefab, Content);
@@ -52,14 +63,23 @@ namespace Core.OrderList
                 totalHeight += newItem.Rect.rect.height;
                 OrderItemObjects.Add(newItem);
             }
+            
+            if (Position == AdditionalDataPosition.Bottom)
+            {
+                LocateAdditionalPanel(ref totalHeight);
+            }
+            
+            Vector2 sizeDelta = Content.sizeDelta;
+            sizeDelta.y = totalHeight;
+            Content.sizeDelta = sizeDelta;
+        }
 
+        private void LocateAdditionalPanel(ref float totalHeight)
+        {
             Vector2 additionalDataAnchoredPosition = AdditionalData.anchoredPosition;
             additionalDataAnchoredPosition.y = -totalHeight;
             AdditionalData.anchoredPosition = additionalDataAnchoredPosition;
             totalHeight += AdditionalData.rect.height;
-            Vector2 sizeDelta = Content.sizeDelta;
-            sizeDelta.y = totalHeight;
-            Content.sizeDelta = sizeDelta;
         }
 
         public void OnRemoveItem(OrderItemObject<T1> item)
@@ -85,6 +105,12 @@ namespace Core.OrderList
         public virtual void InitializeNewItemObject(T2 itemObject)
         {
             itemObject.OnRemove = OnRemoveItem;
+        }
+
+        private enum AdditionalDataPosition
+        {
+            Top,
+            Bottom
         }
     }
 }

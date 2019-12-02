@@ -4,7 +4,7 @@ using Journal_Model;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Core.OrderList
+namespace Core.OrderList.LectureTheme
 {
     public class LectureItemObject : OrderItemObject<LectureItem>
     {
@@ -12,7 +12,7 @@ namespace Core.OrderList
         public InputField NameField;
         public Text DateTimeField;
         public Action OnIdChagned;
-        public LectureTheme Lecture => OrderItem.Lecture;
+        public Journal_Model.LectureTheme Lecture => OrderItem.Lecture;
         public DateDataObject Prefab;
         public List<DateDataObject> DataObjects;
         [SerializeField] private RectTransform AddButton;
@@ -101,10 +101,6 @@ namespace Core.OrderList
         public void AddNewDateData()
         {
             DateDataObject dataObject = Instantiate(Prefab, transform);
-            Vector2 position = dataObject.Rect.anchoredPosition;
-            position.y = -(20 + DataObjects.Count * 80);
-            dataObject.Rect.anchoredPosition = position;
-            AddButton.anchoredPosition = position;
             DateData dateData = new DateData();
             dataObject.Data = dateData;
             OrderItem.Lecture.Datas.Add(dateData);
