@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 01575d3581b806d4a914233f1ef600f4, type: 3}
-  m_Name: "\u0412\u0456\u043A\u0442\u043E\u0440"
+  m_Name: "\u041C\u0438\u043A\u043E\u043B\u0430"
   m_EditorClassIdentifier: 
-  Name: "\u0412\u0456\u043A\u0442\u043E\u0440"
-  SurName: "\u0427\u0435\u0440\u043D\u044F\u043A\u0456\u043D"
-  Patronymic: "\u041F\u0435\u0442\u0440\u043E\u0432\u0438\u0447"
+  Name: "\u041C\u0438\u043A\u043E\u043B\u0430"
+  SurName: "\u0417\u0430\u0439\u0447\u0435\u043D\u043A\u043E"
+  Patronymic: "\u0412\u043E\u043B\u043E\u0434\u0438\u043C\u0438\u0440\u043E\u0432\u0438\u0447"

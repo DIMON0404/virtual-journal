@@ -10,6 +10,8 @@ namespace Utility
         private DateTime LastDateTime = DateTime.Now;
         [SerializeField] private StringUnityEvent OnDateChanged;
 
+#if UNITY_ANDROID && !UNITY_EDITOR
+        
         class DateCallback : AndroidJavaProxy
         {
             private DateTimeHolder selectedDate;
@@ -24,9 +26,13 @@ namespace Utility
                 selectedDate.DateTime = new DateTime(year, monthOfYear + 1, dayOfMonth);
             }
         }
+#endif
 
         public void SelectDate()
         {
+#if UNITY_EDITOR
+            CustomDataPicker.Instance.PickDate(time => SelectedDate.DateTime = time);
+#elif UNITY_ANDROID
             AndroidJavaObject activity =
                 new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
             activity.Call("runOnUiThread",
@@ -35,6 +41,7 @@ namespace Utility
                     new AndroidJavaObject("android.app.DatePickerDialog", activity, new DateCallback(SelectedDate),
                         SelectedDate.DateTime.Year, SelectedDate.DateTime.Month - 1, SelectedDate.DateTime.Day).Call("show");
                 }));
+#endif
         }
 
         private void Update()
